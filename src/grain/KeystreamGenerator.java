@@ -35,6 +35,17 @@ public class KeystreamGenerator {
 	}
 	
 	private void inicializar() {
+		int i;
+		//Inicio NFSR con key
+		for(i=0; i < key.length; i++)
+			nfsr[i] = key[i];
+		
+		//Inicio LFSR con IV y relleno con 1
+		for(i=0; i < iv.length; i++)
+			lfsr[i] = iv[i];
+		for(; i < lfsr.length; i++)
+			lfsr[i] = Byte.MAX_VALUE;
+		
 		
 	}
 	
