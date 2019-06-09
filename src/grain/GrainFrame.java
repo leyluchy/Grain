@@ -1,6 +1,7 @@
 package grain;
 
 import java.awt.BorderLayout;
+//import ImageHandler.java;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -28,8 +29,11 @@ public class GrainFrame extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField iv;
+	private JTextField key;
+	BufferedImage imgOriginal = null;
+	BufferedImage imgCifrada = null;
+	byte[] imageInByte;
 
 	/**
 	 * Launch the application.
@@ -58,6 +62,27 @@ public class GrainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		iv = new JTextField();
+		iv.setBounds(176, 51, 86, 20);
+		contentPane.add(iv);
+		iv.setColumns(10);
+		
+		key = new JTextField();
+		key.setBounds(176, 122, 86, 20);
+		contentPane.add(key);
+		key.setColumns(10);
+		
+		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setBounds(197, 26, 46, 14);
+		contentPane.add(lblPassword);
+		
+		JLabel lblIv = new JLabel("IV");
+		lblIv.setHorizontalAlignment(SwingConstants.CENTER);
+		lblIv.setBounds(197, 97, 46, 14);
+		contentPane.add(lblIv);
+		
+		
+		//Boton que obtiene la imagen desde el archivo
 		JButton btnGetFile = new JButton("Get File");
 		btnGetFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -66,14 +91,15 @@ public class GrainFrame extends JFrame {
 		        if (result == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
 		            //String sname = file.getAbsolutePath();
-		            BufferedImage img = null;
+		            //BufferedImage img = null;
 		            try {
-		                img = ImageIO.read(file);
+		            	imgOriginal = ImageIO.read(file);
 		            } catch (IOException ex) {
 		                ex.printStackTrace();
 		            }
-		            Image dimg = img.getScaledInstance(124,145,Image.SCALE_SMOOTH);
+		            Image dimg = imgOriginal.getScaledInstance(124,145,Image.SCALE_SMOOTH);
 		            ImageIcon imageIcon = new ImageIcon(dimg);
+		            //se crea el Jlabel q contiene la imagen original ya con la imagen adentro
 		            JLabel imageEncriptada = new JLabel("",imageIcon, JLabel.CENTER);
 		    		imageEncriptada.setBounds(26,25,124,145);
 		    		contentPane.add(imageEncriptada);
@@ -85,35 +111,51 @@ public class GrainFrame extends JFrame {
 		btnGetFile.setBounds(37, 203, 89, 23);
 		contentPane.add(btnGetFile);
 		
-		JButton btnSaveFile = new JButton("Save File");
-		btnSaveFile.setBounds(309, 203, 89, 23);
-		contentPane.add(btnSaveFile);
-		
+		//Boton de cifrado/descifrado
 		JButton btnEncryptdecrypt = new JButton("Encrypt/Decrypt");
+		btnEncryptdecrypt.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				 try {
+					 	//paso la imagen original de BufferedImage a ByteArray
+					 	imageInByte = ImageHandler.imageToByteArray(imgOriginal);
+					 	//creo el cipher
+					 	Cypher c = new Cypher(StringHandler.StringToByteArray(key.getText()),StringHandler.StringToByteArray(iv.getText()),imageInByte);
+					 	//obtengo la imagen cifrada
+					 	imgCifrada = ImageHandler.byteArrayToImage(c.getXored());
+					 	
+		            } catch (IOException ex) {
+		                ex.printStackTrace();
+		            } catch (MuchosOPocosBytesException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (LargosDiferentesException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				 	Image cimg = imgCifrada.getScaledInstance(124, 145,Image.SCALE_SMOOTH);
+		            ImageIcon imageIcon = new ImageIcon(cimg);
+		            //creo el JLabel q contiene la imagen encriptada con la imagen encriptada
+		            JLabel imageDesencriptada = new JLabel("",imageIcon, JLabel.CENTER);
+		    		imageDesencriptada.setBounds(287, 26, 124, 145);
+		    		contentPane.add(imageDesencriptada);
+		            contentPane.revalidate();
+		            contentPane.repaint();
+			}
+		});
 		btnEncryptdecrypt.setBounds(150, 203, 138, 23);
 		contentPane.add(btnEncryptdecrypt);
 		
-		textField = new JTextField();
-		textField.setBounds(176, 51, 86, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		//Boton que guarda la imagen cifrada
+		JButton btnSaveFile = new JButton("Save File");
+		btnSaveFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//aca lo que pasa cuando clickeo Guardar
+			}
+		});
+		btnSaveFile.setBounds(309, 203, 89, 23);
+		contentPane.add(btnSaveFile);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(176, 122, 86, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
 		
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(197, 26, 46, 14);
-		contentPane.add(lblPassword);
 		
-		JLabel lblIv = new JLabel("IV");
-		lblIv.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIv.setBounds(197, 97, 46, 14);
-		contentPane.add(lblIv);
-		
-		JLabel imageDesencriptada = new JLabel("");
-		imageDesencriptada.setBounds(287, 26, 124, 145);
-		contentPane.add(imageDesencriptada);
 	}
 }
