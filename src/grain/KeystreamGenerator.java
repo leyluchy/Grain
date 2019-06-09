@@ -54,10 +54,15 @@ public class KeystreamGenerator {
 	/**
 	 * Genera la siguiente parte del keystream para cifrar el mensaje.
 	 * @param cantBytes Cantidad en bytes de keystream a generar
-	 * @return Keystream generado
+	 * @return Keystream generado, expresado en un array de shorts donde cada uno es 1 o 0
 	 */
 	public short[] generarKeystream(int cantBytes) {
-		return null;
+		short[] keystream = new short[cantBytes * 8];
+		
+		for(int i=0; i < keystream.length; i++)
+			keystream[i] = clock();
+		
+		return keystream;
 		
 	}
 	
