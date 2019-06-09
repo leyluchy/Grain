@@ -62,15 +62,16 @@ public class GrainFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		iv = new JTextField();
-		iv.setBounds(176, 51, 86, 20);
-		contentPane.add(iv);
-		iv.setColumns(10);
 		
 		key = new JTextField();
-		key.setBounds(176, 122, 86, 20);
+		key.setBounds(176, 51, 86, 20);
 		contentPane.add(key);
 		key.setColumns(10);
+		
+		iv = new JTextField();
+		iv.setBounds(176, 122, 86, 20);
+		contentPane.add(iv);
+		iv.setColumns(10);
 		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setBounds(197, 26, 46, 14);
