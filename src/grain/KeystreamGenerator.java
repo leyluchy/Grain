@@ -4,9 +4,9 @@ public class KeystreamGenerator {
 	private short[] key, iv, lfsr, nfsr;
 
 	/**
-	 * 
-	 * @param key clave para cifrar
-	 * @param iv semilla para keystream
+	 * Crea e inicializa un generador de keystream.
+	 * @param key clave para cifrar, expresada en array de short donde cada uno es un 1 o un 0
+	 * @param iv semilla para keystream, expresada en array de short donde cada uno es un 1 o un 0
 	 * @throws MuchosOPocosBytesException si key no tiene 80 bits o iv no tiene 64 bits
 	 */
 	public KeystreamGenerator(short[] key, short[] iv) throws MuchosOPocosBytesException {
@@ -34,6 +34,9 @@ public class KeystreamGenerator {
 		
 	}
 	
+	/**
+	 * Inicializa el sistema
+	 */
 	private void inicializar() {
 		int i;
 		//Inicio NFSR con key
@@ -66,29 +69,49 @@ public class KeystreamGenerator {
 		
 	}
 	
+	/**
+	 * Ejecuta un clock normal
+	 * @return El siguiente bit de keystream
+	 */
 	private short clock() {
 		short output = outputFunction();
+		shiftNFSR(feedbackNFSR()); //Esta va primero porque el feedback usa un bit del LFSR actual
 		shiftLFSR(feedbackLFSR());
-		shiftNFSR(feedbackNFSR());
 		return output;
 	}
 	
+	/**
+	 * Ejecuta un clock de inicializacion
+	 */
 	private void initClock() {
 		short output = outputFunction();
+		shiftNFSR((short)((feedbackNFSR() + output) % 2)); //Esta va primero porque el feedback usa un bit del LFSR actual
 		shiftLFSR((short)((feedbackLFSR() + output) % 2));
-		shiftNFSR((short)((feedbackNFSR() + output) % 2));
 	}
 	
+	/**
+	 * Ejecuta la funcion de feedback de LFSR
+	 * @return El bit con que se debe retroalimentar el LFSR
+	 */
 	private short feedbackLFSR() {
 		return (short) ((lfsr[0] + lfsr[13] + lfsr[23] + lfsr[38] + lfsr[51] + lfsr[62]) % 2);
 	}
 	
+	/**
+	 * Corre todos los bits del LFSR una posicion a la izquierda
+	 * @param newBit El bit que se debe colocar en la posicion que queda libre
+	 */
 	private void shiftLFSR(short newBit) {
 		for(int i = 0; i <= lfsr.length - 1; i++)
 			lfsr[i]=lfsr[i+1];
 		lfsr[lfsr.length - 1] = newBit;
 	}
 	
+	/**
+	 * Ejecuta la funcion de feedback del NFSR.
+	 * Usa un bit del LFSR en su estado actual.
+	 * @return El bit con que se debe retroalimentar el NFSR
+	 */
 	private short feedbackNFSR() {
 		return (short) ((
 				lfsr[0] + nfsr[62] + nfsr[60] + nfsr[52] + nfsr[45] + nfsr[37] + nfsr[33] + 
@@ -102,12 +125,22 @@ public class KeystreamGenerator {
 				) % 2);
 	}
 	
+	/**
+	 * Mueve todos los bits del NFSR una posicion a la izquierda.
+	 * @param newBit El bit que se debe colocar en la posicion libre
+	 */
 	private void shiftNFSR(short newBit) {
 		for(int i = 0; i <= nfsr.length - 1; i++)
 			nfsr[i]=nfsr[i+1];
 		nfsr[nfsr.length - 1] = newBit;
 	}
 	
+	/**
+	 * Ejecuta la funcion final que genera un bit mas del keystream.
+	 * Incluye la funcion de filtro h(x)
+	 * Combina bits del NFSR y LFSR en el estado actual.
+	 * @return El nuevo bit del keystream.
+	 */
 	private short outputFunction() {
 		return (short) ((
 				//Esta linea es la sumatoria de bi
