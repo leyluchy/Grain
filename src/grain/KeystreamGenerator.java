@@ -16,7 +16,7 @@ public class KeystreamGenerator {
 			for(int i=0; i < this.key.length; i++)
 				this.key[i] = key[i];
 		}
-		else throw new MuchosOPocosBytesException();
+		else throw new MuchosOPocosBytesException("Clave tiene " + key.length + "bits y tiene que tener 80.");
 		
 		//Levanto iv
 		if(iv.length == 64) {
@@ -24,7 +24,7 @@ public class KeystreamGenerator {
 			for(int i=0; i < this.iv.length; i++)
 				this.iv[i] = iv[i];
 		}
-		else throw new MuchosOPocosBytesException();
+		else throw new MuchosOPocosBytesException("IV tiene " + iv.length + "bits y tiene que tener 64.");
 		
 		//Creo LFSR y NFSR
 		this.lfsr = new short[80];

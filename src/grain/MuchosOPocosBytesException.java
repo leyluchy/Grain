@@ -2,6 +2,14 @@ package grain;
 
 public class MuchosOPocosBytesException extends Exception {
 
+	public MuchosOPocosBytesException(String string) {
+		super(string);
+	}
+
+	public MuchosOPocosBytesException() {
+		super();
+	}
+
 	/**
 	 * 
 	 */
