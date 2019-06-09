@@ -18,6 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.awt.event.ActionEvent;
 import java.awt.Image;
 public class GrainFrame extends JFrame {
@@ -64,9 +65,17 @@ public class GrainFrame extends JFrame {
 		        int result = fc.showOpenDialog(null);
 		        if (result == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
-		            String sname = file.getAbsolutePath();
-		            JLabel imageEncriptada = new JLabel("", new ImageIcon(sname), JLabel.CENTER);
-		    		imageEncriptada.setBounds(37, 26, 110, 145);
+		            //String sname = file.getAbsolutePath();
+		            BufferedImage img = null;
+		            try {
+		                img = ImageIO.read(file);
+		            } catch (IOException ex) {
+		                ex.printStackTrace();
+		            }
+		            Image dimg = img.getScaledInstance(124,145,Image.SCALE_SMOOTH);
+		            ImageIcon imageIcon = new ImageIcon(dimg);
+		            JLabel imageEncriptada = new JLabel("",imageIcon, JLabel.CENTER);
+		    		imageEncriptada.setBounds(26,25,124,145);
 		    		contentPane.add(imageEncriptada);
 		            contentPane.revalidate();
 		            contentPane.repaint();
@@ -104,7 +113,7 @@ public class GrainFrame extends JFrame {
 		contentPane.add(lblIv);
 		
 		JLabel imageDesencriptada = new JLabel("");
-		imageDesencriptada.setBounds(309, 26, 89, 145);
+		imageDesencriptada.setBounds(287, 26, 124, 145);
 		contentPane.add(imageDesencriptada);
 	}
 }
