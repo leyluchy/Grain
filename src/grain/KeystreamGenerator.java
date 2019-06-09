@@ -56,7 +56,7 @@ public class KeystreamGenerator {
 	 * @param cantBytes Cantidad en bytes de keystream a generar
 	 * @return Keystream generado
 	 */
-	public byte[] generarKeystream(int cantBytes) {
+	public short[] generarKeystream(int cantBytes) {
 		return null;
 		
 	}
