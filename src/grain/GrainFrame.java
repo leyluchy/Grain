@@ -6,7 +6,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import java.io.File;
+import java.io.IOException;
 import java.awt.GridLayout;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -14,7 +19,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
+import java.awt.Image;
 public class GrainFrame extends JFrame {
 
 	/**
@@ -55,7 +60,17 @@ public class GrainFrame extends JFrame {
 		JButton btnGetFile = new JButton("Get File");
 		btnGetFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				JFileChooser fc = new JFileChooser();
+		        int result = fc.showOpenDialog(null);
+		        if (result == JFileChooser.APPROVE_OPTION) {
+		            File file = fc.getSelectedFile();
+		            String sname = file.getAbsolutePath();
+		            JLabel imageEncriptada = new JLabel("", new ImageIcon(sname), JLabel.CENTER);
+		    		imageEncriptada.setBounds(37, 26, 110, 145);
+		    		contentPane.add(imageEncriptada);
+		            contentPane.revalidate();
+		            contentPane.repaint();
+		        }
 			}
 		});
 		btnGetFile.setBounds(37, 203, 89, 23);
@@ -87,5 +102,9 @@ public class GrainFrame extends JFrame {
 		lblIv.setHorizontalAlignment(SwingConstants.CENTER);
 		lblIv.setBounds(197, 97, 46, 14);
 		contentPane.add(lblIv);
+		
+		JLabel imageDesencriptada = new JLabel("");
+		imageDesencriptada.setBounds(309, 26, 89, 145);
+		contentPane.add(imageDesencriptada);
 	}
 }
