@@ -15,7 +15,7 @@ public class Cypher {
 	public Cypher(byte[] key, byte[] iv, byte[] plaintext) throws MuchosOPocosBytesException, LargosDiferentesException {
 		kGen = new KeystreamGenerator(ChadByteArrayTovirginShortArray(key), ChadByteArrayTovirginShortArray(iv));
 		this.plaintext = plaintext;
-		this.keystream = virginShortArrayToChadByteArray(kGen.generarKeystream(this.plaintext.length*8)); //Se multiplica por el cambio de tipo
+		this.keystream = virginShortArrayToChadByteArray(kGen.generarKeystream(this.plaintext.length)); //Se multiplica por el cambio de tipo
 		if((this.largo = this.plaintext.length)!=this.keystream.length)
 			throw new LargosDiferentesException();
 	}

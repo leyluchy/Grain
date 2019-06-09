@@ -102,7 +102,7 @@ public class KeystreamGenerator {
 	 * @param newBit El bit que se debe colocar en la posicion que queda libre
 	 */
 	private void shiftLFSR(short newBit) {
-		for(int i = 0; i <= lfsr.length - 1; i++)
+		for(int i = 0; i < lfsr.length - 1; i++)
 			lfsr[i]=lfsr[i+1];
 		lfsr[lfsr.length - 1] = newBit;
 	}
@@ -130,7 +130,7 @@ public class KeystreamGenerator {
 	 * @param newBit El bit que se debe colocar en la posicion libre
 	 */
 	private void shiftNFSR(short newBit) {
-		for(int i = 0; i <= nfsr.length - 1; i++)
+		for(int i = 0; i < (nfsr.length - 1); i++)
 			nfsr[i]=nfsr[i+1];
 		nfsr[nfsr.length - 1] = newBit;
 	}

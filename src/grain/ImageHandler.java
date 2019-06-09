@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -19,8 +20,10 @@ public class ImageHandler {
 	}
 	
 	public static BufferedImage byteArrayToImage(byte[] originalArray) throws IOException{
-		ByteArrayInputStream bis = new ByteArrayInputStream(originalArray);
+		InputStream bis = new ByteArrayInputStream(originalArray);
 	    BufferedImage image = ImageIO.read(bis);
+	    System.out.println("bis es nulo: "+ (bis == null? true:false));
+	    System.out.println("image es nulo: "+ (image == null? true:false));
 	    bis.close();
 	    return image;
 	}
