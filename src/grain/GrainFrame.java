@@ -1,6 +1,7 @@
 package grain;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 //import ImageHandler.java;
 import java.awt.EventQueue;
 
@@ -16,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JFileChooser;
 import java.awt.event.ActionListener;
@@ -31,8 +33,8 @@ public class GrainFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField iv;
 	private JTextField key;
-	BufferedImage imgOriginal = null;
-	BufferedImage imgCifrada = null;
+	private BufferedImage imgOriginal = null;
+	private BufferedImage imgCifrada = null;
 	byte[] imageInByte;
 
 	/**
@@ -82,6 +84,17 @@ public class GrainFrame extends JFrame {
 		lblIv.setBounds(197, 97, 46, 14);
 		contentPane.add(lblIv);
 		
+		JLabel imageEncriptada = new JLabel("", JLabel.CENTER);
+		imageEncriptada.setBounds(26,25,124,145);
+		contentPane.add(imageEncriptada);
+        contentPane.revalidate();
+        contentPane.repaint();
+        
+        JLabel imageDesencriptada = new JLabel("", JLabel.CENTER);
+		imageDesencriptada.setBounds(287, 26, 124, 145);
+		contentPane.add(imageDesencriptada);
+        contentPane.revalidate();
+        contentPane.repaint();
 		
 		//Boton que obtiene la imagen desde el archivo
 		JButton btnGetFile = new JButton("Get File");
@@ -96,16 +109,18 @@ public class GrainFrame extends JFrame {
 		            try {
 		            	imgOriginal = ImageIO.read(file);
 		            } catch (IOException ex) {
-		                ex.printStackTrace();
+		            	JOptionPane.showMessageDialog(GrainFrame.this, "Error al leer el archivo bmp", "Error", JOptionPane.ERROR_MESSAGE);
+		                //ex.printStackTrace();
 		            }
 		            Image dimg = imgOriginal.getScaledInstance(124,145,Image.SCALE_SMOOTH);
 		            ImageIcon imageIcon = new ImageIcon(dimg);
+		            imageEncriptada.setIcon(imageIcon);
 		            //se crea el Jlabel q contiene la imagen original ya con la imagen adentro
-		            JLabel imageEncriptada = new JLabel("",imageIcon, JLabel.CENTER);
+		            /*JLabel imageEncriptada = new JLabel("",imageIcon, JLabel.CENTER);
 		    		imageEncriptada.setBounds(26,25,124,145);
 		    		contentPane.add(imageEncriptada);
 		            contentPane.revalidate();
-		            contentPane.repaint();
+		            contentPane.repaint();*/
 		        }
 			}
 		});
@@ -136,11 +151,12 @@ public class GrainFrame extends JFrame {
 				 	Image cimg = imgCifrada.getScaledInstance(124, 145,Image.SCALE_SMOOTH);
 		            ImageIcon imageIcon = new ImageIcon(cimg);
 		            //creo el JLabel q contiene la imagen encriptada con la imagen encriptada
-		            JLabel imageDesencriptada = new JLabel("",imageIcon, JLabel.CENTER);
+		            imageDesencriptada.setIcon(imageIcon);
+		            /*JLabel imageDesencriptada = new JLabel("",imageIcon, JLabel.CENTER);
 		    		imageDesencriptada.setBounds(287, 26, 124, 145);
 		    		contentPane.add(imageDesencriptada);
 		            contentPane.revalidate();
-		            contentPane.repaint();
+		            contentPane.repaint();*/
 			}
 		});
 		btnEncryptdecrypt.setBounds(150, 203, 138, 23);
@@ -151,12 +167,12 @@ public class GrainFrame extends JFrame {
 		btnSaveFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//aca lo que pasa cuando clickeo Guardar
-				/*try {
+				try {
 					ImageIO.write(imgCifrada, "bmp", new File("C:","snap2.jpg"));
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/
+				}
 			}
 		});
 		btnSaveFile.setBounds(309, 203, 89, 23);
