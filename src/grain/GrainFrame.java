@@ -151,6 +151,12 @@ public class GrainFrame extends JFrame {
 		btnSaveFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//aca lo que pasa cuando clickeo Guardar
+				/*try {
+					ImageIO.write(imgCifrada, "bmp", new File("C:","snap2.jpg"));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
 			}
 		});
 		btnSaveFile.setBounds(309, 203, 89, 23);

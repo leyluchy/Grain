@@ -15,8 +15,8 @@ public class Cypher {
 	public Cypher(byte[] key, byte[] iv, byte[] plaintext) throws MuchosOPocosBytesException, LargosDiferentesException {
 		kGen = new KeystreamGenerator(ChadByteArrayTovirginShortArray(key), ChadByteArrayTovirginShortArray(iv));
 		this.plaintext = plaintext;
-		this.keystream = virginShortArrayToChadByteArray(kGen.generarKeystream(this.plaintext.length)); //Se multiplica por el cambio de tipo
-		if((this.largo = this.plaintext.length)!=this.keystream.length)
+		this.keystream = virginShortArrayToChadByteArray(kGen.generarKeystream(this.plaintext.length-54)); //Se multiplica por el cambio de tipo
+		if((this.largo = this.plaintext.length)-54!=this.keystream.length)
 			throw new LargosDiferentesException();
 	}
 	
@@ -25,7 +25,7 @@ public class Cypher {
 	 * @return array de bytes ya cifrados
 	 */
 	public byte[] getXored() {
-		byte[] tCifrado = this.xorArray(this.plaintext,this.keystream);
+		byte[] tCifrado = this.xorArray();
 		return tCifrado;
 	}
 	
@@ -35,10 +35,14 @@ public class Cypher {
 	 * @param x2 otra de las listas a de bytes a xorear
 	 * @return lista de elementos xoreados
 	 */
-	private byte[] xorArray(byte[] x1, byte[] x2) {
+	private byte[] xorArray() {
 		byte[] tCifrado = new byte[this.largo];
-		for (int i=0; i<this.largo; i++) {
-			tCifrado[i] = (byte) (this.plaintext[i] ^ this.keystream[i]);
+		byte[] nh = getNotHeader(this.plaintext);
+		byte[] h = getHeader(this.plaintext);
+		for(int i=0;i<54;i++)
+			tCifrado[i]=h[i];
+		for (int i=0; i<this.largo-54; i++) {
+			tCifrado[i+54] = (byte) ((nh[i]) ^ this.keystream[i]);
 		}
 		return tCifrado;
 	}
@@ -61,5 +65,20 @@ public class Cypher {
 			}
 		}
 		return salida;
+	}
+	
+	private byte[] getHeader(byte[] b) {
+		byte[] cabecera = new byte[54];
+		for(int i=0;i<54;i++)
+			cabecera[i]=b[i];
+		return cabecera;
+	}
+	
+	private byte[] getNotHeader(byte[] b) {
+		int largo = b.length-54;
+		byte[] toXor = new byte[largo];
+		for(int i=54;i<largo;i++)
+			toXor[i]=b[i];
+		return toXor;
 	}
 }
