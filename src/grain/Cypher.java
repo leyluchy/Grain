@@ -6,16 +6,24 @@ public class Cypher {
 	private KeystreamGenerator kGen;
 
 	/**
-	 * Crea el Generador de claves y obtiene el keystream
-	 * @param key clave para cifrar
-	 * @param iv semilla para keystream
-	 * @param plaintext texto a encriptar/desencriptar
+	 * Crea e inicializa el cifrador
+	 * @param key clave en bytes para cifrar
+	 * @param iv semilla en bytes para keystream
+	 * @param plaintext texto en bytes a encriptar/desencriptar
 	 * @throws MuchosOPocosBytesException si key no tiene 80 bits o iv no tiene 64 bits
+	 * @throws LargosDiferentesException si difieren largo de keystream y plaintext por algun error interno
 	 */
 	public Cypher(byte[] key, byte[] iv, byte[] plaintext) throws MuchosOPocosBytesException, LargosDiferentesException {
+		//Paso key e iv a short[] y creo el keystream generator
 		kGen = new KeystreamGenerator(ChadByteArrayTovirginShortArray(key), ChadByteArrayTovirginShortArray(iv));
+		
 		this.plaintext = plaintext;
+		
+		//Genero el keystream para todo menos la cabecera del .bmp
+		//Paso el keystream a byte[]
 		this.keystream = virginShortArrayToChadByteArray(kGen.generarKeystream(this.plaintext.length-54)); //Se multiplica por el cambio de tipo
+		
+		//Si hay algun error entre largos de keystream y .bmp sin cabecera, exception
 		if((this.largo = this.plaintext.length)-54!=this.keystream.length)
 			throw new LargosDiferentesException();
 	}
@@ -31,16 +39,19 @@ public class Cypher {
 	
 	/**
 	 * Método que se encarga de xorear elemento por elemento
-	 * @param x1 uno de las listas de bytes a xorear
-	 * @param x2 otra de las listas a de bytes a xorear
+	 * XOR entre plaintext sin header y keystream
 	 * @return lista de elementos xoreados
 	 */
 	private byte[] xorArray() {
 		byte[] tCifrado = new byte[this.largo];
 		byte[] nh = getNotHeader(this.plaintext);
 		byte[] h = getHeader(this.plaintext);
+		
+		//Paso el header sin cifrar
 		for(int i=0;i<54;i++)
 			tCifrado[i]=h[i];
+		
+		//Cifro el resto de la imagen
 		for (int i=0; i<this.largo-54; i++) {
 			tCifrado[i+54] = (byte) ((nh[i]) ^ this.keystream[i]);
 		}
