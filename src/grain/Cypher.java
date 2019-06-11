@@ -29,20 +29,11 @@ public class Cypher {
 	}
 	
 	/**
-	 * Método que se encarga de realizar el xoreo entre el texto plano y el keystream
-	 * @return array de bytes ya cifrados
-	 */
-	public byte[] getXored() {
-		byte[] tCifrado = this.xorArray();
-		return tCifrado;
-	}
-	
-	/**
 	 * Método que se encarga de xorear elemento por elemento
 	 * XOR entre plaintext sin header y keystream
 	 * @return lista de elementos xoreados
 	 */
-	private byte[] xorArray() {
+	public byte[] getXored() {
 		byte[] tCifrado = new byte[this.largo];
 		byte[] nh = getNotHeader(this.plaintext);
 		byte[] h = getHeader(this.plaintext);
@@ -52,8 +43,10 @@ public class Cypher {
 			tCifrado[i]=h[i];
 		
 		//Cifro el resto de la imagen
+		System.out.println("IMPRESION!!!!!!!!");
 		for (int i=0; i<this.largo-54; i++) {
 			tCifrado[i+54] = (byte) ((nh[i]) ^ this.keystream[i]);
+			System.out.println("PT: "+nh[i]+" KS: "+this.keystream[i]+" Xred: "+tCifrado[i+54]);
 		}
 		return tCifrado;
 	}
@@ -88,8 +81,8 @@ public class Cypher {
 	private byte[] getNotHeader(byte[] b) {
 		int largo = b.length-54;
 		byte[] toXor = new byte[largo];
-		for(int i=54;i<largo;i++)
-			toXor[i]=b[i];
+		for(int i=0;i<largo;i++)
+			toXor[i]=b[i+54];
 		return toXor;
 	}
 }

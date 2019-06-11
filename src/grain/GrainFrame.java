@@ -136,21 +136,6 @@ public class GrainFrame extends JFrame {
 					 	imageInByte = ImageHandler.imageToByteArray(imgOriginal);
 					 	//creo el cipher
 					 	Cypher c = new Cypher(StringHandler.StringToByteArray(key.getText()),StringHandler.StringToByteArray(iv.getText()),imageInByte);
-					 	byte[] b = new byte[100];
-					 	for(int i=0;i<100;i++) {
-					 		b[i]=(byte) i;
-					 	}
-					 	Cypher d = new Cypher(StringHandler.StringToByteArray(key.getText()),StringHandler.StringToByteArray(iv.getText()),b);
-					 	byte[] e=d.getXored();
-					 	for(int i=0;i<100;i++) {
-					 		System.out.println(e[i]);
-					 	}
-					 	System.out.println("Conveniente separador");
-					 	Cypher f = new Cypher(StringHandler.StringToByteArray(key.getText()),StringHandler.StringToByteArray(iv.getText()),e);
-					 	byte[] g=f.getXored();
-					 	for(int i=0;i<100;i++) {
-					 		System.out.println(g[i]);
-					 	}
 					 	//obtengo la imagen cifrada
 					 	imgCifrada = ImageHandler.byteArrayToImage(c.getXored());
 					 	
