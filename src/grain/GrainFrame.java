@@ -36,7 +36,16 @@ public class GrainFrame extends JFrame {
 	private BufferedImage imgOriginal = null;
 	private BufferedImage imgCifrada = null;
 	byte[] imageInByte;
-
+	/*
+	JLabel lblPassword;
+	JLabel lblIv;
+	JLabel imageEncriptada;
+	JLabel imageDesencriptada;
+	JButton btnGetFile;
+	JButton btnEncryptdecrypt;
+	JButton btnSaveFile;
+	ImageIcon imageIcon;
+	*/
 	/**
 	 * Launch the application.
 	 */
@@ -105,22 +114,15 @@ public class GrainFrame extends JFrame {
 		        if (result == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
 		            //String sname = file.getAbsolutePath();
-		            //BufferedImage img = null;
 		            try {
 		            	imgOriginal = ImageIO.read(file);
 		            } catch (IOException ex) {
 		            	JOptionPane.showMessageDialog(GrainFrame.this, "Error al leer el archivo bmp", "Error", JOptionPane.ERROR_MESSAGE);
 		                //ex.printStackTrace();
 		            }
-		            Image dimg = imgOriginal.getScaledInstance(124,145,Image.SCALE_SMOOTH);
-		            ImageIcon imageIcon = new ImageIcon(dimg);
+		            
+		            ImageIcon imageIcon = new ImageIcon(imgOriginal.getScaledInstance(124,145,Image.SCALE_SMOOTH));
 		            imageEncriptada.setIcon(imageIcon);
-		            //se crea el Jlabel q contiene la imagen original ya con la imagen adentro
-		            /*JLabel imageEncriptada = new JLabel("",imageIcon, JLabel.CENTER);
-		    		imageEncriptada.setBounds(26,25,124,145);
-		    		contentPane.add(imageEncriptada);
-		            contentPane.revalidate();
-		            contentPane.repaint();*/
 		        }
 			}
 		});
@@ -148,15 +150,9 @@ public class GrainFrame extends JFrame {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				 	Image cimg = imgCifrada.getScaledInstance(124, 145,Image.SCALE_SMOOTH);
-		            ImageIcon imageIcon = new ImageIcon(cimg);
+		            ImageIcon imageIcon = new ImageIcon(imgCifrada.getScaledInstance(124, 145,Image.SCALE_SMOOTH));
 		            //creo el JLabel q contiene la imagen encriptada con la imagen encriptada
 		            imageDesencriptada.setIcon(imageIcon);
-		            /*JLabel imageDesencriptada = new JLabel("",imageIcon, JLabel.CENTER);
-		    		imageDesencriptada.setBounds(287, 26, 124, 145);
-		    		contentPane.add(imageDesencriptada);
-		            contentPane.revalidate();
-		            contentPane.repaint();*/
 			}
 		});
 		btnEncryptdecrypt.setBounds(150, 203, 138, 23);
@@ -167,8 +163,14 @@ public class GrainFrame extends JFrame {
 		btnSaveFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//aca lo que pasa cuando clickeo Guardar
+				JFileChooser fc = new JFileChooser();
+		        int result = fc.showSaveDialog(null);
+		        File file = null;
+		        if (result == JFileChooser.APPROVE_OPTION) {
+		            file = new File(fc.getSelectedFile().getAbsolutePath() + ".bmp ");
+		        }
 				try {
-					ImageIO.write(imgCifrada, "bmp", new File("C:","snap2.jpg"));
+					ImageIO.write(imgCifrada, "bmp", file);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
