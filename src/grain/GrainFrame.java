@@ -113,7 +113,6 @@ public class GrainFrame extends JFrame {
 		        int result = fc.showOpenDialog(null);
 		        if (result == JFileChooser.APPROVE_OPTION) {
 		            File file = fc.getSelectedFile();
-		            //String sname = file.getAbsolutePath();
 		            try {
 		            	imgOriginal = ImageIO.read(file);
 		            } catch (IOException ex) {
@@ -133,7 +132,19 @@ public class GrainFrame extends JFrame {
 		JButton btnEncryptdecrypt = new JButton("Encrypt/Decrypt");
 		btnEncryptdecrypt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 try {
+				if( key.getDocument().getLength() != 10 ){
+				    JOptionPane.showMessageDialog(null, "La clave debe ser de 10 caracteres", "Clave Inválida", JOptionPane.ERROR_MESSAGE);
+				    return;
+				} 
+				if( iv.getDocument().getLength() != 8 ){
+				    JOptionPane.showMessageDialog(null, "La semilla debe ser de 8 caracteres", "Semilla Inválida", JOptionPane.ERROR_MESSAGE);
+				    return;
+				}
+				if(imgOriginal == null){
+				    JOptionPane.showMessageDialog(null, "Debe cargar una imagen para cifrar", "Imagen Inválida", JOptionPane.ERROR_MESSAGE);
+				    return;
+				} 
+				try {
 					 	//paso la imagen original de BufferedImage a ByteArray
 					 	imageInByte = ImageHandler.imageToByteArray(imgOriginal);
 					 	//creo el cipher
