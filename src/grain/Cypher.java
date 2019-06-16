@@ -43,10 +43,10 @@ public class Cypher {
 			tCifrado[i]=h[i];
 		
 		//Cifro el resto de la imagen
-		System.out.println("IMPRESION!!!!!!!!");
+		//System.out.println("IMPRESION!!!!!!!!");
 		for (int i=0; i<this.largo-54; i++) {
 			tCifrado[i+54] = (byte) ((nh[i]) ^ this.keystream[i]);
-			System.out.println("PT: "+nh[i]+" KS: "+this.keystream[i]+" Xred: "+tCifrado[i+54]);
+			//System.out.println("PT: "+nh[i]+" KS: "+this.keystream[i]+" Xred: "+tCifrado[i+54]);
 		}
 		return tCifrado;
 	}
