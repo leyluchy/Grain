@@ -37,6 +37,7 @@ public class GrainFrame extends JFrame {
 	private BufferedImage imgCifrada = null;
 	byte[] imageInByte;
 	Cypher cypher;
+	long bytes=0;
 	/*
 	JLabel lblPassword;
 	JLabel lblIv;
@@ -81,17 +82,18 @@ public class GrainFrame extends JFrame {
 		key.setColumns(10);
 		
 		iv = new JTextField();
-		iv.setBounds(176, 122, 86, 20);
+		iv.setBounds(176, 107, 86, 20);
 		contentPane.add(iv);
 		iv.setColumns(10);
 		
 		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setBounds(197, 26, 46, 14);
+		lblPassword.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPassword.setBounds(176, 26, 86, 14);
 		contentPane.add(lblPassword);
 		
 		JLabel lblIv = new JLabel("IV");
 		lblIv.setHorizontalAlignment(SwingConstants.CENTER);
-		lblIv.setBounds(197, 97, 46, 14);
+		lblIv.setBounds(197, 82, 46, 14);
 		contentPane.add(lblIv);
 		
 		JLabel imageEncriptada = new JLabel("", JLabel.CENTER);
@@ -105,6 +107,17 @@ public class GrainFrame extends JFrame {
 		contentPane.add(imageDesencriptada);
         contentPane.revalidate();
         contentPane.repaint();
+        
+        JLabel label = new JLabel("");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setBounds(37, 236, 361, 14);
+		contentPane.add(label);
+		
+		JLabel label_1 = new JLabel("");
+		label_1.setHorizontalAlignment(SwingConstants.CENTER);
+		label_1.setBounds(176, 172, 86, 14);
+		contentPane.add(label_1);
+		
 		
 		//Boton que obtiene la imagen desde el archivo
 		JButton btnGetFile = new JButton("Get File");
@@ -124,7 +137,8 @@ public class GrainFrame extends JFrame {
 		            ImageIcon imageIcon = new ImageIcon(imgOriginal.getScaledInstance(124,145,Image.SCALE_SMOOTH));
 		            imageEncriptada.setIcon(imageIcon);
 		            //Se saca la imagen encriptada anterior cuando se carga un nuevo archivo
-		            imageDesencriptada.setIcon(null); 
+		            imageDesencriptada.setIcon(null);
+		            label_1.setText("");
 		        }
 			}
 		});
@@ -143,9 +157,10 @@ public class GrainFrame extends JFrame {
 					 	//paso la imagen original de BufferedImage a ByteArray
 					 	imageInByte = ImageHandler.imageToByteArray(imgOriginal);
 					 	//creo el cipher
-					 	cypher.prepareCypher(imageInByte);
+					 	bytes=bytes+cypher.prepareCypher(imageInByte);
 					 	//obtengo la imagen cifrada
 					 	imgCifrada = ImageHandler.byteArrayToImage(cypher.getXored());
+					 	label.setText("Bytes procesados: "+bytes);
 					 	
 		            } catch (IOException ex) {
 		                ex.printStackTrace();
@@ -166,6 +181,10 @@ public class GrainFrame extends JFrame {
 		btnSaveFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//aca lo que pasa cuando clickeo Guardar
+				if(imgCifrada==null) {
+					JOptionPane.showMessageDialog(null, "Debe encriptar la imagen para poder guardarla", "Imposible guardar", JOptionPane.ERROR_MESSAGE);
+				    return;	
+				}
 				JFileChooser fc = new JFileChooser();
 		        int result = fc.showSaveDialog(null);
 		        File file = null;
@@ -183,7 +202,7 @@ public class GrainFrame extends JFrame {
 		btnSaveFile.setBounds(309, 203, 89, 23);
 		contentPane.add(btnSaveFile);
 		
-		JButton btnPreparaKeystream = new JButton("Prepare KeyStream");
+		JButton btnPreparaKeystream = new JButton("Prepare");
 		btnPreparaKeystream.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if( key.getDocument().getLength() != 10 ){
@@ -196,16 +215,18 @@ public class GrainFrame extends JFrame {
 				}
 				try {
 					cypher = new Cypher(StringHandler.StringToByteArray(key.getText()),StringHandler.StringToByteArray(iv.getText()));
+					imageEncriptada.setIcon(null);
+		            imageDesencriptada.setIcon(null);
+		            bytes=0;
+		            label.setText("Bytes procesados: "+bytes);
+		            label_1.setText("Inicializado");
 				} catch (MuchosOPocosBytesException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		btnPreparaKeystream.setBounds(150, 153, 138, 23);
+		btnPreparaKeystream.setBounds(176, 138, 86, 23);
 		contentPane.add(btnPreparaKeystream);
-		
-		
-		
 	}
 }

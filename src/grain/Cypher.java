@@ -18,7 +18,7 @@ public class Cypher {
 		kGen = new KeystreamGenerator(ChadByteArrayTovirginShortArray(key), ChadByteArrayTovirginShortArray(iv));	
 	}
 	
-	public void prepareCypher(byte[] plaintext) throws LargosDiferentesException {
+	public long prepareCypher(byte[] plaintext) throws LargosDiferentesException {
 		this.plaintext = plaintext;
 		
 		//Genero el keystream para todo menos la cabecera del .bmp
@@ -28,6 +28,7 @@ public class Cypher {
 		//Si hay algun error entre largos de keystream y .bmp sin cabecera, exception
 		if((this.largo = this.plaintext.length)-54!=this.keystream.length)
 			throw new LargosDiferentesException();
+		return this.plaintext.length*8;
 	}
 	
 	/**
