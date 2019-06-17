@@ -13,10 +13,12 @@ public class Cypher {
 	 * @throws MuchosOPocosBytesException si key no tiene 80 bits o iv no tiene 64 bits
 	 * @throws LargosDiferentesException si difieren largo de keystream y plaintext por algun error interno
 	 */
-	public Cypher(byte[] key, byte[] iv, byte[] plaintext) throws MuchosOPocosBytesException, LargosDiferentesException {
+	public Cypher(byte[] key, byte[] iv) throws MuchosOPocosBytesException {
 		//Paso key e iv a short[] y creo el keystream generator
-		kGen = new KeystreamGenerator(ChadByteArrayTovirginShortArray(key), ChadByteArrayTovirginShortArray(iv));
-		
+		kGen = new KeystreamGenerator(ChadByteArrayTovirginShortArray(key), ChadByteArrayTovirginShortArray(iv));	
+	}
+	
+	public void prepareCypher(byte[] plaintext) throws LargosDiferentesException {
 		this.plaintext = plaintext;
 		
 		//Genero el keystream para todo menos la cabecera del .bmp

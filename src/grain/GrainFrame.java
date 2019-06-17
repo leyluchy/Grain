@@ -36,6 +36,7 @@ public class GrainFrame extends JFrame {
 	private BufferedImage imgOriginal = null;
 	private BufferedImage imgCifrada = null;
 	byte[] imageInByte;
+	Cypher cypher;
 	/*
 	JLabel lblPassword;
 	JLabel lblIv;
@@ -122,6 +123,8 @@ public class GrainFrame extends JFrame {
 		            
 		            ImageIcon imageIcon = new ImageIcon(imgOriginal.getScaledInstance(124,145,Image.SCALE_SMOOTH));
 		            imageEncriptada.setIcon(imageIcon);
+		            //Se saca la imagen encriptada anterior cuando se carga un nuevo archivo
+		            imageDesencriptada.setIcon(null); 
 		        }
 			}
 		});
@@ -132,14 +135,6 @@ public class GrainFrame extends JFrame {
 		JButton btnEncryptdecrypt = new JButton("Encrypt/Decrypt");
 		btnEncryptdecrypt.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if( key.getDocument().getLength() != 10 ){
-				    JOptionPane.showMessageDialog(null, "La clave debe ser de 10 caracteres", "Clave Inválida", JOptionPane.ERROR_MESSAGE);
-				    return;
-				} 
-				if( iv.getDocument().getLength() != 8 ){
-				    JOptionPane.showMessageDialog(null, "La semilla debe ser de 8 caracteres", "Semilla Inválida", JOptionPane.ERROR_MESSAGE);
-				    return;
-				}
 				if(imgOriginal == null){
 				    JOptionPane.showMessageDialog(null, "Debe cargar una imagen para cifrar", "Imagen Inválida", JOptionPane.ERROR_MESSAGE);
 				    return;
@@ -148,15 +143,12 @@ public class GrainFrame extends JFrame {
 					 	//paso la imagen original de BufferedImage a ByteArray
 					 	imageInByte = ImageHandler.imageToByteArray(imgOriginal);
 					 	//creo el cipher
-					 	Cypher c = new Cypher(StringHandler.StringToByteArray(key.getText()),StringHandler.StringToByteArray(iv.getText()),imageInByte);
+					 	cypher.prepareCypher(imageInByte);
 					 	//obtengo la imagen cifrada
-					 	imgCifrada = ImageHandler.byteArrayToImage(c.getXored());
+					 	imgCifrada = ImageHandler.byteArrayToImage(cypher.getXored());
 					 	
 		            } catch (IOException ex) {
 		                ex.printStackTrace();
-		            } catch (MuchosOPocosBytesException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
 					} catch (LargosDiferentesException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -190,6 +182,28 @@ public class GrainFrame extends JFrame {
 		});
 		btnSaveFile.setBounds(309, 203, 89, 23);
 		contentPane.add(btnSaveFile);
+		
+		JButton btnPreparaKeystream = new JButton("Prepare KeyStream");
+		btnPreparaKeystream.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if( key.getDocument().getLength() != 10 ){
+				    JOptionPane.showMessageDialog(null, "La clave debe ser de 10 caracteres", "Clave Inválida", JOptionPane.ERROR_MESSAGE);
+				    return;
+				} 
+				if( iv.getDocument().getLength() != 8 ){
+				    JOptionPane.showMessageDialog(null, "La semilla debe ser de 8 caracteres", "Semilla Inválida", JOptionPane.ERROR_MESSAGE);
+				    return;
+				}
+				try {
+					cypher = new Cypher(StringHandler.StringToByteArray(key.getText()),StringHandler.StringToByteArray(iv.getText()));
+				} catch (MuchosOPocosBytesException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnPreparaKeystream.setBounds(150, 153, 138, 23);
+		contentPane.add(btnPreparaKeystream);
 		
 		
 		
