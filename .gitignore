@@ -3,3 +3,7 @@
 /bin/
 
 \.classpath
+
+*.bmp
+
+*.jpg
